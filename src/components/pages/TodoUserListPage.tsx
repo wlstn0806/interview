@@ -6,41 +6,56 @@ import { TabType, TODO_CONSTANTS } from "../../types/todo";
 import CheckIcon from "../../icon/Check.svg";
 import CloseIcon from "../../icon/Close.svg";
 
-const Container = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
+const PageContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F8F9FD;
   padding: 20px;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 `;
 
 const Title = styled.h1`
   text-align: center;
-  font-size: 32px;
-  margin-bottom: 30px;
+  font-size: 36px;
+  margin-bottom: 40px;
   font-weight: 600;
   color: #333;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 15px 20px;
-  border-radius: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
   border: none;
-  background-color: #f1f1f1;
-  margin-bottom: 30px;
-  font-size: 16px;
+  background-color: #F8F9FD;
+  margin-bottom: 40px;
+  font-size: 14px;
+  box-sizing: border-box;
 
   &::placeholder {
     color: #999;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
 const TabContainer = styled.div`
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 24px;
   justify-content: center;
 `;
 
@@ -50,7 +65,7 @@ const Tab = styled.button<{ isActive: boolean }>`
   background: ${props => props.isActive ? '#EDF2FF' : 'transparent'};
   border-radius: 20px;
   cursor: pointer;
-  color: ${props => props.isActive ? '#3B82F6' : '#666'};
+  color: ${props => props.isActive ? '#4D7FE8' : '#666'};
   font-weight: ${props => props.isActive ? '600' : 'normal'};
   font-size: 14px;
   transition: all 0.2s ease;
@@ -66,15 +81,43 @@ const TodoList = styled.div`
   gap: 12px;
 `;
 
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #DDD;
+  margin-left: 8px;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    path {
+      fill: currentColor;
+    }
+  }
+`;
+
 const TodoItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 8px;
+  padding: 10px 12px;
   border-radius: 8px;
 
   &:hover {
     background-color: #fafafa;
+
+    .delete-button {
+      color: #999;
+
+      &:hover {
+        color: #666;
+      }
+    }
   }
 `;
 
@@ -84,39 +127,16 @@ const TodoCount = styled.div`
   color: #666;
 `;
 
-const IconButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  color: #999;
-  margin-left: 8px;
-
-  &:hover {
-    color: #666;
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    path {
-      fill: currentColor;
-    }
-  }
-`;
-
 const TodoText = styled.span<{ completed?: boolean }>`
   color: ${props => props.completed ? '#999' : '#333'};
-  font-size: 15px;
-  margin-top: 2px;
+  font-size: 14px;
+  line-height: 1.4;
 `;
 
 const CheckButton = styled(IconButton)<{ completed?: boolean }>`
-  width: 20px;
-  height: 20px;
-  min-width: 20px;
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
   padding: 0;
   margin-right: 12px;
   border: 2px solid ${props => props.completed ? '#4D7FE8' : '#DDD'};
@@ -127,16 +147,21 @@ const CheckButton = styled(IconButton)<{ completed?: boolean }>`
   justify-content: center;
   background: ${props => props.completed ? '#4D7FE8' : 'white'};
   transition: all 0.2s ease;
+  color: white;
 
   &:hover {
     border-color: #4D7FE8;
   }
 
   svg {
-    width: 12px;
-    height: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+
     path {
       fill: white;
+      transform-origin: center;
     }
   }
 `;
@@ -168,44 +193,46 @@ const TodoUserListPage = () => {
   };
 
   return (
-    <Container>
-      <Title>To Do List</Title>
-      <form onSubmit={handleSubmit}>
-        <Input
-          placeholder="할 일을 입력해 주세요"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          maxLength={TODO_CONSTANTS.MAX_TODO_LENGTH}
-        />
-      </form>
+    <PageContainer>
+      <Container>
+        <Title>To Do List</Title>
+        <form onSubmit={handleSubmit}>
+          <Input
+            placeholder="할 일을 입력해 주세요"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            maxLength={TODO_CONSTANTS.MAX_TODO_LENGTH}
+          />
+        </form>
 
-      <TabContainer>
-        <Tab isActive={activeTab === 'all'} onClick={() => setActiveTab('all')}>All</Tab>
-        <Tab isActive={activeTab === 'todo'} onClick={() => setActiveTab('todo')}>To Do</Tab>
-        <Tab isActive={activeTab === 'done'} onClick={() => setActiveTab('done')}>Done</Tab>
-      </TabContainer>
+        <TabContainer>
+          <Tab isActive={activeTab === 'all'} onClick={() => setActiveTab('all')}>All</Tab>
+          <Tab isActive={activeTab === 'todo'} onClick={() => setActiveTab('todo')}>To Do</Tab>
+          <Tab isActive={activeTab === 'done'} onClick={() => setActiveTab('done')}>Done</Tab>
+        </TabContainer>
 
-      <TodoCount>총 {todos.length}개</TodoCount>
+        <TodoCount>총 {todos.length}개</TodoCount>
 
-      <TodoList>
-        {todos.map(todo => (
-          <TodoItem key={todo.id}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <CheckButton
-                completed={todo.completed}
-                onClick={() => toggleTodo(todo.id)}
-              >
-                {todo.completed && <CheckIcon />}
-              </CheckButton>
-              <TodoText completed={todo.completed}>{todo.text}</TodoText>
-            </div>
-            <IconButton onClick={() => deleteTodo(todo.id)}>
-              <CloseIcon />
-            </IconButton>
-          </TodoItem>
-        ))}
-      </TodoList>
-    </Container>
+        <TodoList>
+          {todos.map(todo => (
+            <TodoItem key={todo.id}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <CheckButton
+                  completed={todo.completed}
+                  onClick={() => toggleTodo(todo.id)}
+                >
+                  {todo.completed && <CheckIcon />}
+                </CheckButton>
+                <TodoText completed={todo.completed}>{todo.text}</TodoText>
+              </div>
+              <IconButton className="delete-button" onClick={() => deleteTodo(todo.id)}>
+                <CloseIcon />
+              </IconButton>
+            </TodoItem>
+          ))}
+        </TodoList>
+      </Container>
+    </PageContainer>
   );
 };
 
