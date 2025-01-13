@@ -14,7 +14,9 @@ yarn dev
 ### 기타 요구사항
 - 유지보수가 쉽고 역할과 책임이 잘 분리된 코드를 작성해주세요.
 - 테스트 코드를 작성해주세요.
-- git을 활용하여 의미있는 작업 단위로 작업 히스토리를 남겨주세요.# interview
+- git을 활용하여 의미있는 작업 단위로 작업 히스토리를 남겨주세요.
+# interview
+ --init
 # interview
 # interview
 # interview
